@@ -5,20 +5,38 @@ import androidx.recyclerview.widget.RecyclerView
 import com.task.data.dto.movies.MovieItem
 import com.task.data.dto.movies.Movies
 import com.task.databinding.GenreItemBinding
-import com.task.ui.base.listeners.RecyclerItemListener
-import com.task.ui.component.movie.MovieViewModel
+import com.task.ui.base.listeners.MovieItemListener
 
 
-class GenreViewHolder(private val itemBinding: GenreItemBinding ,private val movieViewModel: MovieViewModel) : RecyclerView.ViewHolder(itemBinding.root) {
+class GenreViewHolder(
+    private val itemBinding: GenreItemBinding
+) : RecyclerView.ViewHolder(itemBinding.root), MovieItemListener {
 
-    fun bind(genre: Movies) {
+    private lateinit var movieCallBack: (movie: MovieItem) -> Unit
+
+    fun bind(genre: Movies, callBack: (movieItem: MovieItem) -> Unit) {
+        movieCallBack = callBack
         itemBinding.tvGenre.text = genre.genre
-        itemBinding.rvMovies.layoutManager=LinearLayoutManager(itemBinding.genreItem.context )
+        itemBinding.rvMovies.layoutManager = LinearLayoutManager(itemBinding.genreItem.context)
         itemBinding.tvGenre.text = genre.genre
-        itemBinding.rvMovies.layoutManager=LinearLayoutManager(itemBinding.genreItem.context  ,LinearLayoutManager.HORIZONTAL ,false)
-        itemBinding.rvMovies.adapter =MovieAdapter(movieViewModel ,
-            genre.movies as ArrayList<MovieItem>
+        itemBinding.rvMovies.layoutManager = LinearLayoutManager(
+            itemBinding.genreItem.context,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        itemBinding.rvMovies.adapter = MovieAdapter(
+            genre.movies as ArrayList<MovieItem>,
+            this
+        )
+
+    }
+
+    override fun onMovieSelected(movie: MovieItem) {
+        movieCallBack(
+            movie
         )
     }
+
+
 }
 

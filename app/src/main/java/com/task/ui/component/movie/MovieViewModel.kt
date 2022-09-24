@@ -13,8 +13,6 @@ import com.task.ui.base.BaseViewModel
 import com.task.utils.SingleEvent
 import com.task.utils.wrapEspressoIdlingResource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,22 +21,11 @@ import javax.inject.Inject
 class MovieViewModel @Inject
 constructor(private val dataRepositoryRepository: DataRepositorySource) : BaseViewModel() {
 
+    private val movieDetailsLiveDataPrivate = MutableLiveData<SingleEvent<Resource<MovieItem>>>()
+    val movieDetailsLiveData: LiveData<SingleEvent<Resource<MovieItem>>> get() = movieDetailsLiveDataPrivate
 
-    val movieDetailsLiveDataPrivate = MutableLiveData<Resource<MovieItem>>()
-    val movieDetailsLiveData: LiveData<Resource<MovieItem>> get() = movieDetailsLiveDataPrivate
-
-    val moviesLiveDataPrivate = MutableLiveData<Resource<Movies>>()
-    val moviesLiveData: LiveData<Resource<Movies>> get() = moviesLiveDataPrivate
-
-
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val citiesSearchFoundPrivate: MutableLiveData<Unit> = MutableLiveData()
-    val citiesSearchFound: LiveData<Unit> get() = citiesSearchFoundPrivate
-
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val noSearchFoundPrivate: MutableLiveData<Unit> = MutableLiveData()
-    val noSearchFound: LiveData<Unit> get() = noSearchFoundPrivate
-
+    private val moviesLiveDataPrivate = MutableLiveData<SingleEvent<Resource<Movies>>>()
+    val moviesLiveData: LiveData<SingleEvent<Resource<Movies>>> get() = moviesLiveDataPrivate
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     private val showSnackBarPrivate = MutableLiveData<SingleEvent<Any>>()
@@ -48,29 +35,26 @@ constructor(private val dataRepositoryRepository: DataRepositorySource) : BaseVi
     private val showToastPrivate = MutableLiveData<SingleEvent<Any>>()
     val showToast: LiveData<SingleEvent<Any>> get() = showToastPrivate
 
-
     fun getGenres() {
         viewModelScope.launch {
             wrapEspressoIdlingResource {
-                dataRepositoryRepository.requestGenres().map {
+                dataRepositoryRepository.requestGenres().collect {
                     if (it is Resource.Success)
-                        it.data?.genreList?.map { getMovies(it.name) }
-                    it
-                }.collect {
-
+                        it.data?.let { it1 -> getMovies(it1) }
                 }
             }
         }
     }
 
-    fun getMovies(genre: String) {
+    private fun getMovies(genres: Genres) {
         viewModelScope.launch {
-            moviesLiveDataPrivate.value = Resource.Loading()
+            moviesLiveDataPrivate.value = SingleEvent(Resource.Loading())
             wrapEspressoIdlingResource {
-                dataRepositoryRepository.requestMovies(genre).collect {
-                    it.data?.genre = genre
-                    moviesLiveDataPrivate.value = it
+                dataRepositoryRepository.requestMovies(genres).collect {
+                    if (it is Resource.Success)
+                        moviesLiveDataPrivate.value = SingleEvent(it)
                 }
+
             }
         }
     }
@@ -81,14 +65,9 @@ constructor(private val dataRepositoryRepository: DataRepositorySource) : BaseVi
         showToastPrivate.value = SingleEvent(error.description)
     }
 
-    fun onEmptySearch() {
-        return noSearchFoundPrivate.postValue(Unit)
-    }
+    fun navigateToDetails() {
 
-    fun onFoundSearch() {
-        return citiesSearchFoundPrivate.postValue(Unit)
     }
-
 
 
 }

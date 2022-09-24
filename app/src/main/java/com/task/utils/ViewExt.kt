@@ -20,6 +20,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import com.task.App
 import com.task.R
+import com.task.data.dto.movies.MovieItem
+import com.task.data.local.MovieEntity
 
 fun View.showKeyboard() {
     (this.context.getSystemService(Service.INPUT_METHOD_SERVICE) as? InputMethodManager)
@@ -35,12 +37,22 @@ fun View.toVisible() {
     this.visibility = View.VISIBLE
 }
 
-fun View.toGone() {
+fun View. toGone() {
     this.visibility = View.GONE
 }
 
 fun View.toInvisible() {
     this.visibility = View.GONE
+}
+fun List<MovieEntity>.toMovieItem():List<MovieItem>{
+    return this.map {
+        MovieItem(it.id ,it.genreId ,it.name ,it.posterPath ,it.overview ,it.vote)
+    }
+}
+fun List<MovieItem>.toMovieEntity():List<MovieEntity>{
+    return this.map {
+        MovieEntity(it.id ,it.genreId?:0 ,it.name ,it.posterPath ,it.overview ,it.vote)
+    }
 }
 
 

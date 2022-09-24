@@ -8,12 +8,12 @@ import retrofit2.http.QueryMap
 
 
 interface MovieService {
-    @GET("3/genre/movie/list")
+    @GET("3/genre/movie/list?api_key=c2a845daa01463fbf94d9b12347c88e1")
     suspend fun fetchGenres(
         @QueryMap options: Map<String, String>? =null
     ): Response<Genres>
 
-    @GET("3/discover/movie")
+    @GET("3/discover/movie?api_key=c2a845daa01463fbf94d9b12347c88e1")
     suspend fun fetchMovies(
         @QueryMap options: Map<String, String>? =null
     ): Response<Movies>

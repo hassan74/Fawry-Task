@@ -1,6 +1,7 @@
 package com.task.data.remote
 
 import com.task.data.Resource
+import com.task.data.dto.movies.GenreItem
 import com.task.data.dto.movies.Genres
 import com.task.data.dto.movies.MovieItem
 import com.task.data.dto.movies.Movies
@@ -47,13 +48,13 @@ constructor(
         }
     }
 
-    override suspend fun requestMovies(genre: String): Resource<Movies> {
+    override suspend fun requestMovies(genreItem: GenreItem): Resource<Movies> {
         val movieService = serviceGenerator.createService(MovieService::class.java)
-        val options = mapOf("with_genres" to genre)
+        val options = mapOf("with_genres" to genreItem.id.toString())
         return when (
             val response = processCall(options, responseCall = movieService::fetchMovies)) {
             is Movies -> {
-                Resource.Success(data = Movies(movies = response.movies))
+                Resource.Success(data = Movies(genreItem.name ,movies = response.movies ))
             }
             else -> {
                 Resource.DataError(errorCode = response as Int)

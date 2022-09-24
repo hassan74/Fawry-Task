@@ -1,7 +1,7 @@
 package com.task.ui.base
 
 import androidx.lifecycle.ViewModel
-import com.task.usecase.errors.ErrorManager
+import com.task.domain.usecase.errors.ErrorManager
 import javax.inject.Inject
 
 

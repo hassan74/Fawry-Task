@@ -1,8 +1,9 @@
 package com.task.di
 
 import android.content.Context
-import com.task.App
+import com.task.data.local.GenreDao
 import com.task.data.local.LocalData
+import com.task.data.local.MovieDao
 import com.task.utils.Network
 import com.task.utils.NetworkConnectivity
 import dagger.Module
@@ -19,8 +20,12 @@ import kotlin.coroutines.CoroutineContext
 class AppModule {
     @Provides
     @Singleton
-    fun provideLocalRepository(@ApplicationContext context: Context): LocalData {
-        return LocalData(context)
+    fun provideLocalRepository(
+        genreDao: GenreDao,
+        movieDao: MovieDao,
+        @ApplicationContext context: Context
+    ): LocalData {
+        return LocalData(movieDao, genreDao, context)
     }
 
     @Provides

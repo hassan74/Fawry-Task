@@ -3,10 +3,11 @@ package com.task.ui.component.splash
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import com.task.databinding.SplashLayoutBinding
 import com.task.ui.base.BaseActivity
 import com.task.SPLASH_DELAY
-import com.task.ui.component.movie.MovieActivity
+import com.task.ui.component.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
  
@@ -30,8 +31,8 @@ class SplashActivity : BaseActivity(){
     }
 
     private fun navigateToMainScreen() {
-        Handler().postDelayed({
-            val nextScreenIntent = Intent(this, MovieActivity::class.java)
+        Handler(Looper.getMainLooper()).postDelayed({
+            val nextScreenIntent = Intent(this, MainActivity::class.java)
             startActivity(nextScreenIntent)
             finish()
         }, SPLASH_DELAY.toLong())

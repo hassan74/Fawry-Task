@@ -2,8 +2,8 @@ package com.task.di
 
 import com.task.data.error.mapper.ErrorMapper
 import com.task.data.error.mapper.ErrorMapperSource
-import com.task.usecase.errors.ErrorUseCase
-import com.task.usecase.errors.ErrorManager
+import com.task.domain.usecase.errors.ErrorUseCase
+import com.task.domain.usecase.errors.ErrorManager
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
