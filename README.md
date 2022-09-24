@@ -1,9 +1,14 @@
-This project develped by Mohamed Hassan 
-it takes about 7 hours 
+This Movie App Project develped by Mohamed Hassan 
 
 
 Used Features 
-[Model-View-ViewModel 
-Retrofit with Coroutines
+Clean Code Arch
+Model View ViewModel
+Room Database
+Retrofit
 Coroutines 
 liveData
+Dependency Injection(Hilt)
+ViewBinding
+Navigation Component
+Kotlin extension function
