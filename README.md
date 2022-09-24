@@ -1,4 +1,4 @@
-This project develped by Mohamed Hassan 
+This Movie App Project develped by Mohamed Hassan 
 
 
 Used Features 
